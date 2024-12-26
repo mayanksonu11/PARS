@@ -43,6 +43,8 @@ int main(int argc, char** argv){
     srand(seed);
 	double part = stod(argv[3]);  
 
+	string model = argv[5];
+
 	vector<pair<int,int>> coord(n);
 	for(int i=0;i<n;i++){
 		coord[i].first =rand()%250;
@@ -76,6 +78,8 @@ int main(int argc, char** argv){
     // link[12][10]=1;link[12][13]=1;link[12][9]=1;
     // link[13][3]=1;link[13][11]=1;link[13][12]=1;
 
+
+	// GEANT-2
     link[0][1]=1;
 	link[0][2]=1;
 	link[1][0]=1;
@@ -196,19 +200,36 @@ int main(int argc, char** argv){
 
 	// Concept of resource sharing to be used with PARS
 
-	for(int i=0;i<n;i++){
+	// for(int i=0;i<n;i++){
+	// 	int div = node[i].size();
+	// 	for(auto v:node[i]){
+
+	// 		per_node_vnf_resource_slice0[i][v]= part*capacity/div;
+	// 		per_node_vnf_resource_slice1[i][v]= (1-part)*capacity/div;
+			
+	// 		per_node_vnf_resource[i][v] = per_node_vnf_resource_slice0[i][v]+per_node_vnf_resource_slice1[i][v];
+	// 	}
+	// }
+
+
+	for(int i=0; i < n; i++){
 		int div = node[i].size();
 		for(auto v:node[i]){
-			if(v==0){
-				per_node_vnf_resource_slice0[i][v]= part*1*capacity/div;
-				per_node_vnf_resource_slice1[i][v]= (1-part)*1*capacity/div;
+			if(model == "PARS"){
+				per_node_vnf_resource_slice0[i][v]= part*capacity/div;
+				per_node_vnf_resource_slice1[i][v]= (1-part)*capacity/div;
 			}
 			else{
-				per_node_vnf_resource_slice0[i][v]= part*capacity/div; 
-				per_node_vnf_resource_slice1[i][v]= (1-part)*capacity/div; 
+				int random = rand()%2;
+				if(random == 0)
+					per_node_vnf_resource_slice0[i][v]= part*capacity/div;
+				else
+					per_node_vnf_resource_slice1[i][v]= part*capacity/div;
 			}
-			per_node_vnf_resource[i][v] = per_node_vnf_resource_slice0[i][v]+per_node_vnf_resource_slice1[i][v];
+			
 		}
+		
+		per_node_vnf_resource[i][v] = per_node_vnf_resource_slice0[i][v]+per_node_vnf_resource_slice1[i][v];
 	}
 	
 	/*
@@ -240,6 +261,8 @@ int main(int argc, char** argv){
     displayNodeUt(per_node_vnf_resource);
     displayNodeUt(per_node_vnf_resource_slice0);
     displayNodeUt(per_node_vnf_resource_slice1);
+   	displayLinkUt(link_ut);
+
 	// cin >> flag_global;
     printGraph(adj);
     /*

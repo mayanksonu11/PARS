@@ -16,7 +16,7 @@ int flag_global=0,calls=0,max_length=0;
 double wt,throughput,reward,total_latency;
 double link_bw = 10000; // in MHz
 // double cpu_freq =8000; //in MHz 
-double capacity=8000;
+double capacity=40000;
 int k=8,maxVNFs=8; //k is types of vnf
 int numOfUsers,chain_length=k/2,iter_val;
 int latency_slice0=1,latency_slice1=100;
@@ -884,7 +884,7 @@ vector<pair<int,vector<int>>> func1(vector<pair<double,double>> per_user_req,vec
 				continue;
 			}			
 		}
-		cout << "Checkpoint-3b" << endl;
+		// cout << "Checkpoint-3b" << endl;
 		int chain_length = sfc_chain.size()-1;
 		//fixing egress node into the system
 		if(type==2){
@@ -896,7 +896,7 @@ vector<pair<int,vector<int>>> func1(vector<pair<double,double>> per_user_req,vec
 			node_map[last_node] = f[sfc_chain[last_node]][rand()%t4];
 			while(node_map[0]==node_map[last_node])
 				node_map[last_node] = f[sfc_chain[last_node]][rand()%t4];
-			cout << node_map[last_node] << " " << sfc_chain[last_node] << endl;
+			// cout << node_map[last_node] << " " << sfc_chain[last_node] << endl;
 			if(slice==0){ 
 				if(avail_res[node_map[last_node]][sfc_chain[last_node]]<per_user_ut_node[sfc_chain[last_node]]*rate){
 					fail_node_map++;
@@ -923,7 +923,7 @@ vector<pair<int,vector<int>>> func1(vector<pair<double,double>> per_user_req,vec
 		//after fixing f0 we could have either path to f1 precalculated or we could calculate it in real time here. 
 		// VNF1 onwards mapping using OPTION (A)
 		int flag_loaded=0,flag_sos=0;
-		cout << "Checkpoint-3c" << endl;
+		// cout << "Checkpoint-3c" << endl;
 		for(int i=0;i<sfc_chain.size();i++){
 		// for(int i=sfc_chain.size()-2;i>0;i--){
 			if(node_map[i]!=-1)
@@ -960,7 +960,7 @@ vector<pair<int,vector<int>>> func1(vector<pair<double,double>> per_user_req,vec
 			if(type==2){		
 				node_map[i] = find_good_node(req_res,sfc_chain[i],f[sfc_chain[i]],node_map[i+1],node_map,avail_res,link_ut);
 				if(node_map[i]==-1 || avail_res[node_map[i]][sfc_chain[i]]<req_res){
-					cout << "Node mapping has failed for " << sfc_chain[i] <<  endl;
+					// cout << "Node mapping has failed for " << sfc_chain[i] <<  endl;
 					// display(f[sfc_chain[i]]);
 					// display_utilisation(sfc_chain[i],per_node_vnf_resource);
 					// display(node_map);
@@ -972,7 +972,7 @@ vector<pair<int,vector<int>>> func1(vector<pair<double,double>> per_user_req,vec
 			if(model=="PARS"){
 				node_map[i] = find_min_usage(req_res,sfc_chain[i], f[sfc_chain[i]], node_map ,avail_res,net_res);
 				if(node_map[i]==-1|| avail_res[node_map[i]][sfc_chain[i]]<=req_res){
-					cout << "Node mapping has failed for " << sfc_chain[i] <<  endl;
+					// cout << "Node mapping has failed for " << sfc_chain[i] <<  endl;
 					// display_utilisation(sfc_chain[i],per_node_vnf_resource);
 					// display_utilisation(per_node_vnf_resource);
 					flag_loaded=1;
@@ -994,21 +994,21 @@ vector<pair<int,vector<int>>> func1(vector<pair<double,double>> per_user_req,vec
 
 		}
 		// cout << endl;
-		cout << "Checkpoint-3d" << endl;
+		// cout << "Checkpoint-3d" << endl;
 		if(flag_loaded){
 			// fail_count++;
 			if(slice==0) failed_node_map_s0++;
 			if(slice==1) failed_node_map_s1++;
 			// break;
-			cout << "Node Mapping Failed!" << endl;
+			// cout << "Node Mapping Failed!" << endl;
 			fail_node_map++;
     		recent_observation[index]=0;
 			continue;
 		}
-		cout << "Checkpoint-4a" << endl;
+		// cout << "Checkpoint-4a" << endl;
 		//======================End of Node Mapping============================
 
-		display(node_map);
+		// display(node_map);
 		//**********************Start of Node route========================
     	vector<int> route;
     	route.push_back(node_map[0]);
@@ -1016,7 +1016,7 @@ vector<pair<int,vector<int>>> func1(vector<pair<double,double>> per_user_req,vec
     		vector<int> visited(n,0);
     		vector<int> temp;
     		if(reachable[node_map[i]][node_map[i+1]]){
-    			cout << " It is reachable" << endl;
+    			// cout << " It is reachable" << endl;
     		}
     		else{
     			flag_loaded=1;
@@ -1043,11 +1043,11 @@ vector<pair<int,vector<int>>> func1(vector<pair<double,double>> per_user_req,vec
     		recent_observation[index]=0;
 			continue;
     	}
-		cout << "Checkpoint-4b" << endl;
+		// cout << "Checkpoint-4b" << endl;
 
     	// if(slice==0){
 	    if(findTotalLatency(route,sfc_chain,node_map,link_ut,avail_res,net_res,slice)>latency){
-	    	cout << "failed in latency" << endl;
+	    	// cout << "failed in latency" << endl;
 	    	failed_latency++;
 	    	recent_observation[index]=0;
 			if(slice==0) failed_latency_s0++;
@@ -1070,7 +1070,7 @@ vector<pair<int,vector<int>>> func1(vector<pair<double,double>> per_user_req,vec
 			continue;
 		}
 
-		cout << "Checkpoint-5" << endl;
+		// cout << "Checkpoint-5" << endl;
     	for(int i=1;i<route.size();i++){
     		if(link_ut[route[i-1]][route[i]]>=link_bw){
     			flag_loaded=1;
@@ -1081,7 +1081,7 @@ vector<pair<int,vector<int>>> func1(vector<pair<double,double>> per_user_req,vec
 
     	//===================End of Node routing=============================
 
-		cout << "Checkpoint-6" << endl;
+		// cout << "Checkpoint-6" << endl;
     	//Check if anything failed in node placement as well as routing
     	if(flag_loaded){
     		// break;
@@ -1094,7 +1094,7 @@ vector<pair<int,vector<int>>> func1(vector<pair<double,double>> per_user_req,vec
     	else{
     	//if everytihing went well we are updating the values of node and link as the user gets connected
 			for(int j=0;j<node_map.size();j++){
-				cout << node_map[j] << " " <<  sfc_chain[j]<< endl;
+				// cout << node_map[j] << " " <<  sfc_chain[j]<< endl;
 				// displayNodeUt(per_node_vnf_resource);
 				per_node_vnf_resource[node_map[j]][sfc_chain[j]]-= per_user_ut_node[sfc_chain[j]]*rate;
 				// per_node_vnf_resource[node_map[j]][sfc_chain[j]]-= 1;
@@ -1145,7 +1145,7 @@ vector<pair<int,vector<int>>> func1(vector<pair<double,double>> per_user_req,vec
     	}
 
     	//We increment the number of successful user
-		cout << "Checkpoint-7" << endl;
+		// cout << "Checkpoint-7" << endl;
     	success++;
     	recent_observation[index]=1;
     	tot_cost+=op_cost;
